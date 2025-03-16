@@ -2,6 +2,6 @@
 
 void main (argc) {
     printf("hello\n");
-    printf("hello\n");
-    
+    printf("hellmo\n");
+
 }
