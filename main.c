@@ -18,15 +18,17 @@ typedef struct {
     int command_count; // 命令数量
 } Rule;
 
-int main(int argc, char *argv[]) {
-    int verbose_mode = 0; // 是否启用详细模式
-    char target[256] = ""; // 目标参数
-    Rule rules[MAX_TARGETS]; // 存储规则数组
+Rule rules[MAX_TARGETS]; // 存储规则数组
     int rule_count = 0; // 规则数量
     char current_target[MAX_LINE_LENGTH]; // 存储当前目标名称
     char line[MAX_LINE_LENGTH]; // 用于存储每行的内容
     int line_number = 0; // 记录行号
     int in_rule = 0; // 标记是否在规则定义中
+
+int main(int argc, char *argv[]) {
+    int verbose_mode = 0; // 是否启用详细模式
+    char target[256] = ""; // 目标参数
+    
 
     // 解析命令行参数
     int result = parse_command_line(argc, argv, &verbose_mode, target);

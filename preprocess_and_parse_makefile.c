@@ -8,7 +8,6 @@
 #define MAX_TARGETS 100 // 定义最大规则数量
 #define MAX_DEPENDENCIES 100 // 定义最大依赖数量
 #define MAX_COMMANDS 100 // 定义最大命令数量
-#define MAX_LENGTH 1024 // 定义最大长度
 
 // 定义规则结构体Rule
 typedef struct {
@@ -19,18 +18,20 @@ typedef struct {
     int command_count; // 命令数量
 } Rule;
 
+// 定义规则数组
+Rule rules[MAX_TARGETS]; // 存储规则数组
+int rule_count = 0; // 规则数量
+char current_target[MAX_LINE_LENGTH]; // 存储当前目标名称
+char line[MAX_LINE_LENGTH]; // 用于存储每行的内容
+int line_number = 0; // 记录行号
+int in_rule = 0; // 标记是否在规则定义中
+
+
+
 
 // 预处理Makefile文件
 void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
-    // 定义规则数组
-    Rule rules[MAX_TARGETS]; // 存储规则数组
-    int rule_count = 0; // 规则数量
-    char current_target[MAX_LINE_LENGTH]; // 存储当前目标名称
-    char line[MAX_LINE_LENGTH]; // 用于存储每行的内容
-    int line_number = 0; // 记录行号
-    int in_rule = 0; // 标记是否在规则定义中
-
-
+    
     FILE *file = fopen(filename, "r"); // 打开Makefile文件
     if (file == NULL) {
         perror("Error opening Makefile");
@@ -138,8 +139,7 @@ void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
                         strcpy(rules[rule_count].dependencies[rules[rule_count].dependency_count], token);
                         rules[rule_count].dependency_count++;
                     }
-                    token = strtok(NULL, " ");
-                }
+                    token = strtok(NULL, " \t");
 
                 rule_count++;
                 in_rule = 1;

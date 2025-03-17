@@ -1,6 +1,2 @@
-# This is a comment
-app: main.c utils.c
-    gcc -o app main.c utils.c
-
-clean:
-    rm -f app
+app:test1.c test2.c
+    gcc -o app test1.c test2.c
