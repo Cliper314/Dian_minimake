@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
         // 在这里可以继续处理其他任务，如读取Makefile等
         printf("Verbose mode: %d\n", verbose_mode);
         printf("Target: %s\n", target);
-        return 0;
+
     }
     //预处理并解析Makefile文件
     preprocess_and_parse_makefile("./Makefile", verbose_mode);

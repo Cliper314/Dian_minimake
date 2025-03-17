@@ -19,12 +19,12 @@ typedef struct {
 } Rule;
 
 // 定义规则数组
-Rule rules[MAX_TARGETS]; // 存储规则数组
-int rule_count = 0; // 规则数量
-char current_target[MAX_LINE_LENGTH]; // 存储当前目标名称
-char line[MAX_LINE_LENGTH]; // 用于存储每行的内容
-int line_number = 0; // 记录行号
-int in_rule = 0; // 标记是否在规则定义中
+extern Rule rules[MAX_TARGETS]; // 存储规则数组
+extern int rule_count; // 规则数量
+extern char current_target[MAX_LINE_LENGTH]; // 存储当前目标名称
+extern char line[MAX_LINE_LENGTH]; // 用于存储每行的内容
+extern int line_number; // 记录行号
+extern int in_rule; // 标记是否在规则定义中
 
 
 
@@ -35,6 +35,9 @@ void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
     FILE *file = fopen(filename, "r"); // 打开Makefile文件
     if (file == NULL) {
         perror("Error opening Makefile");
+        if (verbose_mode) {
+            fclose(file);
+        }
         return;
     }
 
@@ -105,7 +108,7 @@ void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
             if (line[0] == '\t') {
                 char command[MAX_LINE_LENGTH];
                 strcpy(command, line + 1);
-                if (rules[rule_count - 1].command_count < MAX_COMMANDS) {
+                if (rule_count > 0 && rules[rule_count - 1].command_count < MAX_COMMANDS) {
                     strcpy(rules[rule_count - 1].commands[rules[rule_count - 1].command_count], command);
                     rules[rule_count - 1].command_count++;
                 }
@@ -133,14 +136,14 @@ void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
                 rules[rule_count].command_count = 0;
 
                  // 使用 strtok 函数提取目标行中的依赖项
-                char *token = strtok(colon_pos + 1, " ");
-                while (token != NULL) {
-                    if (rules[rule_count].dependency_count < MAX_DEPENDENCIES) {
-                        strcpy(rules[rule_count].dependencies[rules[rule_count].dependency_count], token);
-                        rules[rule_count].dependency_count++;
-                    }
-                    token = strtok(NULL, " \t");
-
+                 char *token = strtok(colon_pos + 1, " \t");
+                 while (token != NULL) {
+                     if (rules[rule_count].dependency_count < MAX_DEPENDENCIES) {
+                         strcpy(rules[rule_count].dependencies[rules[rule_count].dependency_count], token);
+                         rules[rule_count].dependency_count++;
+                     }
+                     token = strtok(NULL, " \t");
+                 }
                 rule_count++;
                 in_rule = 1;
             }
