@@ -16,6 +16,7 @@ void preprocess_makefile(const char *filename, int verbose_mode) {
 
     char line[MAX_LINE_LENGTH]; // 用于存储每行的内容
     int line_number = 0; // 记录行号
+    int in_rule = 0; // 标记是否在规则定义中
 
     // 打开文件以写入清理后的内容（如果启用详细模式）
     FILE *output_file = NULL;
@@ -73,7 +74,7 @@ void preprocess_makefile(const char *filename, int verbose_mode) {
         }
 
         // 调用语法检查函数完成静态语法检查
-        syntax_check(line,line_number);
+        syntax_check(line,line_number,&in_rule);
 
         // 如果启用详细模式，将清理后的行写入输出文件
         if (verbose_mode) {
