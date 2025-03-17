@@ -21,5 +21,5 @@ void syntax_check(const char *line, int line_number) {
     }
 
     // 如果既不是命令行也不是目标行，则报错
-    fprintf(stderr, "Line %d: Invalid syntax\n", line_number);
+    fprintf(stderr, "Line %d: Missing colon in taget definition\n", line_number);
 }
