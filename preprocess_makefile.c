@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "syntax_check.h"
 
 #define MAX_LINE_LENGTH 1024 // 定义每行的最大长度
 
@@ -71,12 +72,15 @@ void preprocess_makefile(const char *filename, int verbose_mode) {
             continue;
         }
 
+        // 调用语法检查函数完成静态语法检查
+        syntax_check(line,line_number);
+
         // 如果启用详细模式，将清理后的行写入输出文件
         if (verbose_mode) {
             fprintf(output_file, "%s\n", line);
         }
 
-        // 打印处理后的行（调试用）
+        // 打印处理后的行（调试用,最后记得删）
         printf("Line %d: %s\n", line_number, line);
     }
 
