@@ -6,6 +6,7 @@
 
 #define MAX_LINE_LENGTH 1024
 
+// 解析命令行参数
 int parse_command_line(int argc, char *argv[], int *verbose_mode, char *target) {
     // 遍历命令行参数
     for (int i = 1; i < argc; i++) {
