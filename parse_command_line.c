@@ -19,6 +19,11 @@ int parse_command_line(int argc, char *argv[], int *verbose_mode, char *target) 
         else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
             *verbose_mode = 1;
         }
+        // 如果参数以'-'开头，但不是已知选项，报错并返回-2
+        else if (argv[i][0] == '-') {
+            fprintf(stderr, "Error: Unknown option: %s\n", argv[i]);
+            return -2;
+        }
         // 否则认为是目标参数
         else {
             // 如果目标参数已经存在，报错并返回-1
