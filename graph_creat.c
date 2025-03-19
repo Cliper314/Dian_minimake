@@ -2,19 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "head.h"
 
-#define MAX_NODES 100 // 定义最大节点数量
 
-// 定义节点结构体Node
-typedef struct {
-    char name[100]; // 节点名称
-    int in_degree; // 入度
-    char dependencies[10][100]; // 存储依赖数组
-    int dep_count; // 依赖数量
-} Node;
+extern Rule rules[MAX_TARGETS]; // 存储规则数组
+extern int rule_count; // 规则数量
 
-Node nodes[MAX_NODES];
-int node_count = 0;
+
+extern Node nodes[MAX_NODES];
+extern int node_count;
 
 // 添加节点
 void add_node(const char *name) {
@@ -39,6 +35,37 @@ void add_dependency(const char *from, const char *to) {
                     strcpy(nodes[i].dependencies[nodes[i].dep_count], to);
                     nodes[i].dep_count++;
                     return;
+                }
+            }
+        }
+    }
+}
+
+// 添加目标和依赖文件名到节点
+void add_targets_and_dependencies() {
+    for (int i = 0; i < rule_count; i++) {
+        // 检查目标是否已经存在，不存在则添加
+        for (int j = 0; j < node_count; j++) {
+            if (strcmp(nodes[j].name, rules[i].target) == 0) {
+                break;
+            }
+            //如果没有找到目标节点，则添加
+            if (j == node_count - 1) {
+                add_node(rules[i].target);
+            }
+        }
+        add_node(rules[i].target);
+        for (int j = 0; j < rules[i].dependency_count; j++) {
+            add_dependency(rules[i].target, rules[i].dependencies[j]);
+           
+            // 检查依赖是否已经存在，不存在则添加
+            for(int k=0;k<node_count;k++){
+                if(strcmp(nodes[k].name,rules[i].dependencies[j])==0){
+                    break;
+                }
+                ////如果没有找到目标节点，则添加
+                if(k==node_count-1){
+                    add_node(rules[i].dependencies[j]);
                 }
             }
         }

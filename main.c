@@ -2,21 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "parse_command_line.h"
-#include "preprocess_and_parse_makefile.h"
+#include "graph_creat.h" 
+#include "head.h"
 
-#define MAX_LINE_LENGTH 1024 // 定义每行的最大长度
-#define MAX_TARGETS 100 // 定义最大规则数量
-#define MAX_DEPENDENCIES 100 // 定义最大依赖数量
-#define MAX_COMMANDS 100 // 定义最大命令数量
 
-typedef struct {
-    char target[MAX_LINE_LENGTH]; // 目标名称
-    char dependencies[MAX_DEPENDENCIES][MAX_LINE_LENGTH]; // 存储依赖数组
-    int dependency_count; // 依赖数量
-    char commands[MAX_COMMANDS][MAX_LINE_LENGTH]; // 存储命令数组
-    int command_count; // 命令数量
-} Rule;
+
 
 Rule rules[MAX_TARGETS]; // 存储规则数组
     int rule_count = 0; // 规则数量
@@ -24,6 +14,8 @@ Rule rules[MAX_TARGETS]; // 存储规则数组
     char line[MAX_LINE_LENGTH]; // 用于存储每行的内容
     int line_number = 0; // 记录行号
    
+    Node nodes[MAX_NODES];
+int node_count = 0;
 
 int main(int argc, char *argv[]) {
     int verbose_mode = 0; // 是否启用详细模式
@@ -62,6 +54,9 @@ int main(int argc, char *argv[]) {
             printf("  %s\n", rules[i].commands[j]);
         }
     }
+
+    add_targets_and_dependencies();
+    topological_sort();
     return 0;
 
 }
