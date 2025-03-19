@@ -23,7 +23,7 @@ Rule rules[MAX_TARGETS]; // 存储规则数组
     char current_target[MAX_LINE_LENGTH]; // 存储当前目标名称
     char line[MAX_LINE_LENGTH]; // 用于存储每行的内容
     int line_number = 0; // 记录行号
-    int in_rule = 0; // 标记是否在规则定义中
+   
 
 int main(int argc, char *argv[]) {
     int verbose_mode = 0; // 是否启用详细模式
@@ -37,8 +37,8 @@ int main(int argc, char *argv[]) {
     if (result == 0) {
         // 如果返回0，说明打印了帮助信息，程序正常退出
         return 0;
-    } else if (result == -1) {
-        // 如果返回-1，说明参数解析有误，程序退出并返回错误码
+    } else if (result == -1||result==-2) {
+        // 如果返回-1或者-2，说明参数解析有误，程序退出并返回错误码
         return 1;
     } else {
         // 如果返回1，说明参数解析正常完成

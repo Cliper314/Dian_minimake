@@ -24,14 +24,15 @@ extern int rule_count; // 规则数量
 extern char current_target[MAX_LINE_LENGTH]; // 存储当前目标名称
 extern char line[MAX_LINE_LENGTH]; // 用于存储每行的内容
 extern int line_number; // 记录行号
-extern int in_rule; // 标记是否在规则定义中
+
 
 
 
 
 // 预处理Makefile文件
 void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
-    
+    int in_rule = 0; // 标记是否在规则定义中
+    int in_rule2 = 0;
     FILE *file = fopen(filename, "r"); // 打开Makefile文件
     if (file == NULL) {
         perror("Error opening Makefile");
@@ -45,7 +46,7 @@ void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
     // 打开文件以写入清理后的内容（如果启用详细模式）
     FILE *output_file = NULL; // 输出文件指针
     if (verbose_mode) {
-        output_file = fopen("Minimake_cleaned.mk", "w");
+        output_file = fopen("Minimake_cleaned.mk", "w");//（后续记得处理）
         if (output_file == NULL) {
             perror("Error creating Minimake_cleaned.mk");
             fclose(file);
@@ -99,7 +100,7 @@ void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
 
 
         // 调用语法检查函数完成静态语法检查
-        syntax_check(line,line_number,&in_rule);
+        syntax_check(line,line_number,&in_rule2);
         
         // 处理规则定义
         if (in_rule) {
