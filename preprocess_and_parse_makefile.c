@@ -108,7 +108,7 @@ void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
             // 检查当前行是否是命令行（以制表符 '\t' 开头）
             if (line[0] == '\t') {
                 char command[MAX_LINE_LENGTH];
-                strcpy(command, line + 1);
+                strcpy(command, line + 1); // 去除制表符
                 if (rule_count > 0 && rules[rule_count - 1].command_count < MAX_COMMANDS) {
                     strcpy(rules[rule_count - 1].commands[rules[rule_count - 1].command_count], command);
                     rules[rule_count - 1].command_count++;

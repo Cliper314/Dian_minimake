@@ -1,4 +1,4 @@
-// 打印帮助信息
+// 打印帮助信息(完成后加上)
 void print_help() {
     printf("Usage: minimake [options] [target]\n");
     printf("Options:\n");

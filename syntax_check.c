@@ -7,7 +7,7 @@ void syntax_check(const char *line, int line_number,int *in_rule2) {
      // 检查是否为目标行（包含冒号分隔符）
      char *colon_pos = strchr(line, ':');
      if (colon_pos != NULL) {
-         *in_rule2 = 1;//标记已经进入规则
+         *in_rule2 = 1; // 标记已经进入规则
          return;
      }
 
@@ -25,8 +25,10 @@ void syntax_check(const char *line, int line_number,int *in_rule2) {
     }
 
    // 如果既不是命令行也不是目标行，则报错
-   
-    fprintf(stderr, "Line %d: Missing colon in taget definition\n", line_number);
-    *in_rule2 = 0;//重置标记为没有进入规则
+   else {
+    fprintf(stderr, "Line %d: Missing colon in target definition\n", line_number);
+    *in_rule2 = 0; // 重置标记为没有进入规则
+    return;
+    }
    
 }
