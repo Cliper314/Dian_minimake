@@ -12,9 +12,7 @@ extern int rule_count; // 规则数量
 
 
 extern Node nodes[MAX_NODES];
-extern Node nodes2[MAX_NODES];
 extern int node_count;
-extern int node_count2;
 
 // 添加节点
 void add_node(const char *name) {
@@ -29,27 +27,16 @@ void add_node(const char *name) {
     node_count++;
 }
 
-void add_node2(const char *name) {
-    for (int i = 0; i < node_count2; i++) {
-        if (strcmp(nodes2[i].name, name) == 0) {
-            return;
-        }
-    }
-    strcpy(nodes2[node_count2].name, name);
-    nodes2[node_count2].in_degree = 0;
-    nodes2[node_count2].dep_count = 0;
-    node_count2++;
-}
 
 // 添加依赖关系
 void add_dependency(const char *from, const char *to) {
     for (int i = 0; i < node_count; i++) {
         if (strcmp(nodes[i].name, from) == 0) {
+            strcpy(nodes[i].dependencies[nodes[i].dep_count], to);
+            nodes[i].dep_count++;
             for (int j = 0; j < node_count; j++) {
                 if (strcmp(nodes[j].name, to) == 0) {
                     nodes[j].in_degree++;
-                    strcpy(nodes[i].dependencies[nodes[i].dep_count], to);
-                    nodes[i].dep_count++;
                     return;
                 }
             }
@@ -61,27 +48,30 @@ void add_dependency(const char *from, const char *to) {
 void add_targets_and_dependencies() {
     for (int i = 0; i < rule_count; i++) {
         // 检查目标是否已经存在，不存在则添加
+        int target_exists = 0;
         for (int j = 0; j < node_count; j++) {
             if (strcmp(nodes[j].name, rules[i].target) == 0) {
+                target_exists = 1;
                 break;
             }
-            //如果没有找到目标节点，则添加
-            if (j == node_count - 1) {
-                add_node(rules[i].target);
-            }
         }
+        if (!target_exists) {
+            add_node(rules[i].target);
+        }
+
         for (int j = 0; j < rules[i].dependency_count; j++) {
             add_dependency(rules[i].target, rules[i].dependencies[j]);
-           
+
             // 检查依赖是否已经存在，不存在则添加
-            for(int k=0;k<node_count;k++){
-                if(strcmp(nodes[k].name,rules[i].dependencies[j])==0){
+            int dep_exists = 0;
+            for (int k = 0; k < node_count; k++) {
+                if (strcmp(nodes[k].name, rules[i].dependencies[j]) == 0) {
+                    dep_exists = 1;
                     break;
                 }
-                ////如果没有找到目标节点，则添加
-                if(k==node_count-1){
-                    add_node(rules[i].dependencies[j]);
-                }
+            }
+            if (!dep_exists) {
+                add_node(rules[i].dependencies[j]);
             }
         }
     }
@@ -102,7 +92,6 @@ void topological_sort() {
     while (front < rear) {
         int u = queue[front++];
         printf("%s ", nodes[u].name);
-        add_node2(nodes[u].name);
         for (int i = 0; i < nodes[u].dep_count; i++) {
             for (int j = 0; j < node_count; j++) {
                 if (strcmp(nodes[j].name, nodes[u].dependencies[i]) == 0) {
@@ -140,16 +129,26 @@ time_t get_file_mtime(const char *filename) {
 // 判断是否需要重新构建返回1则需要
 int need_rebuild(const char *target, const char *dependencies[], int dep_count) {
     if (get_file_mtime(target) == -1) {
+        printf("Target file %s does not exist.\n", target);
         return 1;
     }
 
     time_t target_mtime = get_file_mtime(target);
+    //printf("Target file %s modification time: %ld\n", target, target_mtime);
 
     for (int i = 0; i < dep_count; i++) {
         const char *dep = dependencies[i];
         time_t dep_mtime = get_file_mtime(dep);
 
-        if (dep_mtime == -1 || dep_mtime > target_mtime) {
+        if (dep_mtime == -1) {
+            printf("Dependency file %s does not exist.\n", dep);
+            return 1;
+        }
+
+        //printf("Dependency file %s modification time: %ld\n", dep, dep_mtime);
+
+        if (dep_mtime > target_mtime) {
+            printf("Dependency file %s is newer than target file %s.\n", dep, target);
             return 1;
         }
     }
