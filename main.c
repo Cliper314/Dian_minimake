@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "graph_creat.h" 
 #include "head.h"
 
 
@@ -15,7 +14,10 @@ Rule rules[MAX_TARGETS]; // 存储规则数组
     int line_number = 0; // 记录行号
    
     Node nodes[MAX_NODES];
-int node_count = 0;
+    Node nodes2[MAX_NODES];
+    int node_count = 0;
+    int node_count2 = 0;
+
 
 int main(int argc, char *argv[]) {
     int verbose_mode = 0; // 是否启用详细模式
@@ -55,8 +57,19 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    add_targets_and_dependencies();
-    topological_sort();
-    return 0;
 
+    // 添加节点和依赖关系
+    add_targets_and_dependencies();
+
+    // 打印依赖图
+    print_dependency_graph();
+
+    // 拓扑排序
+    topological_sort();
+    
+    //时间戳检查
+    if(need_rebuild(node2(node_count2-1),nodes,node_count)){
+        printf("Need to rebuild %s\n",target);
+    }
+    return 0;
 }

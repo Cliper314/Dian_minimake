@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <time.h>
 #include "head.h"
 
 
@@ -10,7 +12,9 @@ extern int rule_count; // 规则数量
 
 
 extern Node nodes[MAX_NODES];
+extern Node nodes2[MAX_NODES];
 extern int node_count;
+extern int node_count2;
 
 // 添加节点
 void add_node(const char *name) {
@@ -23,6 +27,18 @@ void add_node(const char *name) {
     nodes[node_count].in_degree = 0;
     nodes[node_count].dep_count = 0;
     node_count++;
+}
+
+void add_node2(const char *name) {
+    for (int i = 0; i < node_count2; i++) {
+        if (strcmp(nodes2[i].name, name) == 0) {
+            return;
+        }
+    }
+    strcpy(nodes2[node_count2].name, name);
+    nodes2[node_count2].in_degree = 0;
+    nodes2[node_count2].dep_count = 0;
+    node_count2++;
 }
 
 // 添加依赖关系
@@ -54,7 +70,6 @@ void add_targets_and_dependencies() {
                 add_node(rules[i].target);
             }
         }
-        add_node(rules[i].target);
         for (int j = 0; j < rules[i].dependency_count; j++) {
             add_dependency(rules[i].target, rules[i].dependencies[j]);
            
@@ -87,7 +102,7 @@ void topological_sort() {
     while (front < rear) {
         int u = queue[front++];
         printf("%s ", nodes[u].name);
-
+        add_node2(nodes[u].name);
         for (int i = 0; i < nodes[u].dep_count; i++) {
             for (int j = 0; j < node_count; j++) {
                 if (strcmp(nodes[j].name, nodes[u].dependencies[i]) == 0) {
@@ -100,4 +115,44 @@ void topological_sort() {
             }
         }
     }
+}
+
+// 打印依赖图
+void print_dependency_graph() {
+    for (int i = 0; i < node_count; i++) {
+        printf("%s:", nodes[i].name);
+        for (int j = 0; j < nodes[i].dep_count; j++) {
+            printf(" %s", nodes[i].dependencies[j]);
+        }
+        printf("\n");
+    }
+}
+
+// 获取文件的修改时间
+time_t get_file_mtime(const char *filename) {
+    struct stat buffer;
+    if (stat(filename, &buffer) == 0) {
+        return buffer.st_mtime;
+    }
+    return -1;
+}
+
+// 判断是否需要重新构建返回1则需要
+int need_rebuild(const char *target, const char *dependencies[], int dep_count) {
+    if (get_file_mtime(target) == -1) {
+        return 1;
+    }
+
+    time_t target_mtime = get_file_mtime(target);
+
+    for (int i = 0; i < dep_count; i++) {
+        const char *dep = dependencies[i];
+        time_t dep_mtime = get_file_mtime(dep);
+
+        if (dep_mtime == -1 || dep_mtime > target_mtime) {
+            return 1;
+        }
+    }
+
+    return 0;
 }

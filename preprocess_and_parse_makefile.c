@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "syntax_check.h"
-#include "graph_creat.h"
 #include "head.h"
 
 
@@ -36,7 +34,7 @@ void preprocess_and_parse_makefile(const char *filename, int verbose_mode) {
     // 打开文件以写入清理后的内容（如果启用详细模式）
     FILE *output_file = NULL; // 输出文件指针
     if (verbose_mode) {
-        output_file = fopen("Minimake_cleaned.mk", "w");//（后续记得处理）
+        output_file = fopen("Minimake_cleaned.mk", "w");
         if (output_file == NULL) {
             perror("Error creating Minimake_cleaned.mk");
             fclose(file);
