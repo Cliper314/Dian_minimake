@@ -82,6 +82,12 @@ int main(int argc, char *argv[]) {
 
     if (need_rebuild(target, dependencies, dep_count)) {
         printf("Need to rebuild %s\n", target);
+        for (int i = 0; i < rule_count; i++) {
+            if (strcmp(rules[i].target, target) == 0) {
+                execute_commands(rules[i]); // 调用execute_commands函数
+                break;
+            }
+        }
     }
     return 0;
 }

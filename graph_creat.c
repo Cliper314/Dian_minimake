@@ -80,7 +80,8 @@ void add_targets_and_dependencies() {
 // 拓扑排序
 void topological_sort() {
     int queue[MAX_NODES];
-    int front = 0, rear = 0;
+    int stack[MAX_NODES];
+    int front = 0, rear = 0, top = -1;
 
     // 将入度为0的节点加入队列(入度为 0 的节点表示没有未完成的依赖，可以立即处理。)
     for (int i = 0; i < node_count; i++) {
@@ -91,7 +92,7 @@ void topological_sort() {
 
     while (front < rear) {
         int u = queue[front++];
-        printf("%s ", nodes[u].name);
+        stack[++top] = u; // 将节点添加到栈中
         for (int i = 0; i < nodes[u].dep_count; i++) {
             for (int j = 0; j < node_count; j++) {
                 if (strcmp(nodes[j].name, nodes[u].dependencies[i]) == 0) {
@@ -103,6 +104,12 @@ void topological_sort() {
                 }
             }
         }
+    }
+
+    // 从栈中弹出节点进行输出，确保先输出依赖项后输出目标项
+    while (top >= 0) {
+        int u = stack[top--];
+        printf("%s ", nodes[u].name);
     }
 }
 
