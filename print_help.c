@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 
-// 打印帮助信息(完成后加上)
+// 打印帮助信息
 void print_help() {
     printf("Usage: minimake [options] [target]\n");
     printf("Options:\n");

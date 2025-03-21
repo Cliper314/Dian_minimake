@@ -1,1 +1,0 @@
-void preprocess_makefile(const char *filename, int verbose_mode);

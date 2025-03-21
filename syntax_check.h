@@ -1,1 +1,0 @@
-void syntax_check(const char *line, int line_number,int *in_rule);

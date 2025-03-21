@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "print_help.h"
+#include "head.h"
 
 #define MAX_LINE_LENGTH 1024
 
