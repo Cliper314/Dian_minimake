@@ -88,6 +88,8 @@ int main(int argc, char *argv[]) {
                 break;
             }
         }
+    }else{
+        printf("No need to rebuild %s\n", target);
     }
     return 0;
 }
