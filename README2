@@ -1,0 +1,4 @@
+stage1_and_stage2是阶段1和阶段2的可执行文件
+stage3是阶段3的可执行文件
+stage4_system是直接使用system函数构建的阶段4的可执行文件
+stage4是使用fork(),execvp()和waited()函数构建的阶段4的可执行文件
