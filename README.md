@@ -53,9 +53,10 @@
 			例如：head -n 5 file1.txt
 	
 2.系统信息和管理
-	`查看当前路径：  pwd `
-		`pwd`
-		`显示当前工作目录的绝对路径。`
+```
+	查看当前路径：  pwd 
+		pwd
+		显示当前工作目录的绝对路径。
 	
 	查看系统信息：  uname  
 		uname
@@ -71,13 +72,15 @@
 	查看文件系统信息：  lsblk  
 		lsblk
 		• 显示所有块设备的信息。
+```
 	
 3.文本处理
-	`查找文件：  find`
-		`find <directory> -name <pattern>`
-		`在指定目录中查找符合特定模式的文件。`
-		`•   -type  ：指定文件类型（如   f   表示文件，  d   表示目录）。`
-		`•   -mtime  ：查找修改时间符合特定条件的文件。`
+```
+	查找文件：  find
+		find <directory> -name <pattern>
+		在指定目录中查找符合特定模式的文件。
+		•   -type  ：指定文件类型（如   f   表示文件，  d   表示目录）。
+		•   -mtime  ：查找修改时间符合特定条件的文件。
 	
 	查找文本内容：  grep  
 		grep <pattern> <file>
@@ -90,13 +93,14 @@
 		sed 's/<old>/<new>/' <file>
 		在文件中替换文本内容。
 		-i  ：直接修改文件内容。不加的话不会修改文件中内容而只是打印出修改内容。
+```
 	
 
 
 ---
 ## git
 	### 1.配置git
-		`git config --global user.name "Your Name"
+		git config --global user.name "Your Name"
 		git config --global user.email "your_email@example.com"
 	
 	### 2.创建与克隆仓库
